@@ -4,11 +4,13 @@ import { LucidePencil, LucideSquareArrowOutUpRight, LucideTrash } from "lucide-r
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ticketEditPath, ticketPath } from "@/paths"
+import { formatCurrency } from "@/utils/format-currency"
 
 import deleteTicket from "../actions/delete-tickets"
 import { TICKET_ICONS } from "../constants"
+import { TicketDropdown } from "./ticket-dropdown"
 
 type TicketItemProps = {
     ticket: Ticket
@@ -58,12 +60,17 @@ export default function TicketItem({ ticket, isDetail = false }: TicketItemProps
                         "line-clamp-3": !isDetail
                     })}>{ticket.content}</p>
                 </CardContent>
+                <CardFooter className="flex items-center justify-between">
+                    <span>{ticket.deadline}</span>
+                    <span className="font-bold">{formatCurrency(ticket.bounty)}</span>
+                </CardFooter>
             </Card>
             <div className="flex flex-col gap-2">
                 {isDetail ?
                     <>
                         {editButton}
                         {deleteButton}
+                        <TicketDropdown ticket={ticket} />
                     </>
                     :
                     <>

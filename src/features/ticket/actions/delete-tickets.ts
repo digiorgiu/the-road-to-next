@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation"
 
+import { setCookieByKey } from "@/actions/cookies"
 import { prisma } from "@/lib/prisma"
 import { ticketsPath } from "@/paths"
 
@@ -11,6 +12,6 @@ export default async function deleteTicket(ticketId: string) {
             id: ticketId
         }
     })
-    
+    await setCookieByKey("toast", "Ticket successfully deleted")
     redirect(ticketsPath())
 }
