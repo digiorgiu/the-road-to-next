@@ -5,8 +5,9 @@ import { redirect } from "next/navigation"
 import { z } from "zod"
 
 import { setCookieByKey } from "@/actions/cookies"
+import { getCurrentSession } from "@/lib/auth/get-current-session"
 import { prisma } from "@/lib/prisma"
-import { ticketPath, ticketsPath } from "@/paths"
+import { signInPath, ticketPath, ticketsPath } from "@/paths"
 import { toCents } from "@/utils/format-currency"
 
 import { ActionState } from "../../../components/form/utils/action-state-type"
@@ -22,6 +23,12 @@ const UpsertTicketSchema = z.object({
 
 export default async function upsertTicket(id: string | undefined, _state: ActionState, formData: FormData): Promise<ActionState> {
 
+    const { user } = await getCurrentSession()
+
+    if (!user) {
+        redirect(signInPath())
+    }
+
     try {
         const data = UpsertTicketSchema.parse({
             title: formData.get("title"),
@@ -32,6 +39,7 @@ export default async function upsertTicket(id: string | undefined, _state: Actio
 
         const dataWithCents = {
             ...data,
+            userId: user.id,
             bounty: toCents(data.bounty)
         }
 
