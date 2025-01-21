@@ -1,7 +1,19 @@
+import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { signInPath, ticketsPath } from "./paths";
+
 export async function middleware(request: NextRequest): Promise<NextResponse> {
+
+    if (request.nextUrl.pathname.startsWith(ticketsPath())) {
+        const cookieStore = await cookies()
+        const sessionToken = cookieStore.get("session")
+        if (!sessionToken) {
+            return NextResponse.redirect(new URL(signInPath(), request.url));
+        }
+    }
+
     if (request.method === "GET") {
         const response = NextResponse.next();
         const token = request.cookies.get("session")?.value ?? null;
