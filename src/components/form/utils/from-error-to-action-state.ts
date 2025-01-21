@@ -11,7 +11,15 @@ export default function fromErrorToActionState(error: unknown, payload: FormData
             payload,
             status: "ERROR"
         }
-    } else {
+    } else if (error instanceof Error) {
+        return {
+            message: error.message,
+            fieldErrors: {},
+            payload,
+            status: "ERROR"
+        }
+    }
+    else {
         return {
             message: "Something wrong happend",
             fieldErrors: {},

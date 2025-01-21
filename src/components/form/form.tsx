@@ -6,7 +6,7 @@ type FormProps = {
     actionState: ActionState
     children: React.ReactNode
     classNames: string
-    onSuccess: () => void
+    onSuccess?: () => void
 }
 
 export default function Form({ action, actionState, children, classNames, onSuccess }: FormProps) {

@@ -5,11 +5,11 @@ import { toast } from "sonner";
 
 import { ActionState } from "../utils/action-state-type";
 
-export default function useFormFeedback(actionState: ActionState, onSuccess: () => void) {
+export default function useFormFeedback(actionState: ActionState, onSuccess?: () => void) {
     useEffect(() => {
         if (!actionState.message) return
         if (actionState.status && actionState.status === "SUCCESS") {
-            onSuccess()
+            onSuccess?.()
             toast.success(actionState.message)
         }
         if (actionState.status && actionState.status === "ERROR") {
